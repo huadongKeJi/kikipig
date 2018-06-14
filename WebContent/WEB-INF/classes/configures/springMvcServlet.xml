@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+		 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd 
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		
+		<!-- 静态资源下面的不拦截 -->
+	<!--	<mvc:resources location="/statics/" mapping="/statics/**" cache-period="31536000">
+			<mvc:resource-chain resource-cache="true">
+			<mvc:resolvers>
+				<bean class="org.springframework.web.servlet.resource.GzipResourceResolver"/>
+			</mvc:resolvers>
+		</mvc:resource-chain>	
+		</mvc:resources> -->
+		<mvc:resources location="/statics/" mapping="/statics/**" />
+		<!-- 启用MVC注解 -->
+		<mvc:annotation-driven/>
+		<!-- 扫描Controller层类 -->
+		<context:component-scan base-package="com.kikipig.controller"/>
+		
+		<!-- 配置SpringMVC视图解析 -->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+			<property name="prefix" value="/WEB-INF/view/"/>
+			<property name="suffix" value=".jsp"/>
+		</bean>
+		
+		
+		<!-- 配置用户登录拦截器 -->
+		<!-- <mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/user/**"/> 拦截 /user/开头的controller请求
+				<mvc:exclude-mapping path=""/>
+				<bean id="userLoginInterceptor" class="com.ozuzu.interceptor.UserLoginInterceptor"/>
+			</mvc:interceptor>
+		</mvc:interceptors> -->
+		
+		<!-- 定义统一的异常处理类 -->
+		<bean id="exceptionResolver" class="com.kikipig.resolver.OzuzuHandlerExceptionResolver"/>
+</beans>

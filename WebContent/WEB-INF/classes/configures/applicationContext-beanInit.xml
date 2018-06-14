@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	
+	<!-- 邮件发送基础信息配置 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    	 <property name="host" value="${mail_host}"/> <!--  邮件端口 -->
+    	<property name="defaultEncoding" value="${mail_defaultEncoding}"/> <!-- 默认的编码 -->
+    	<property name="username" value="${mail_username}"/> <!--  发件人 -->
+    	<property name="password" value="${mail_password}"/> <!--         密码 -->
+    	<property name="javaMailProperties">
+    		<props>
+    			<prop key="mail.smtp.auth">${mail_smtp_auth}</prop> <!-- 身份验证 -->
+    			<prop key="mail.smtp.port">${mail_smtp_port}</prop> <!-- 邮件服务器端口 -->
+    		</props>
+    	</property> 
+	</bean>
+
+	<!-- 邮件模板 -->
+	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+	    <property name="from" value="${mail_username}"/> <!-- 发件人 -->
+	</bean>
+	
+	<!-- 初始化邮件发送类 -->
+	<bean id="springMailInitialize" class="com.kikipig.util.SpringMailUtil">
+	    <property name="mailSender" ref="mailSender"/>
+	    <property name="templateMessage" ref="templateMessage"/>
+	</bean>
+</beans>
