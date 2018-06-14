@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 根目录,status为设置日志级别 TRACE < DEBUG < INFO < WARN < ERROR < FATAL -->
+<Configuration status="INFO">
+	<!-- 定义常量 -->
+	 <properties>  
+        <property name="LOG_HOME">${sys:catalina.home}/logs/mbrand/</property>
+        <property name="FILE_NAME">mbrand</property>
+    </properties>
+	<!-- Appender可以理解为日志的输出目的地 -->
+	<Appenders>
+		<!--这个输出控制台的配置-->
+		<console name="Console" target="SYSTEM_OUT">
+			<!--输出日志的格式-->
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F-%M] - %msg%n"></PatternLayout>
+		</console>
+		
+		<RollingFile name="RollingFileInfo" fileName="${LOG_HOME}/info/${FILE_NAME}.log" filePattern="${LOG_HOME}/info/${FILE_NAME}-%d{yyyy-MM-dd}.log">
+			<!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F-%M] - %msg%n"></PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1"/><!-- 根据filePattern中的日期格式 -->
+			</Policies>
+		</RollingFile>
+		
+		<RollingFile name="RollingFileWarn" fileName="${LOG_HOME}/warn/${FILE_NAME}.log" filePattern="${LOG_HOME}/warn/${FILE_NAME}-%d{yyyy-MM-dd}.log">
+			<Filters>
+				<ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/> <!-- warn里面过滤error日志 -->
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+			</Filters>
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F-%M] - %msg%n"></PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1"/>  
+             </Policies>
+         	<!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+<!--          	<DefaultRolloverStrategy max="20"/> -->
+         </RollingFile>
+         
+         <RollingFile name="RollingFileError" fileName="${LOG_HOME}/error/${FILE_NAME}.log" filePattern="${LOG_HOME}/error/${FILE_NAME}-%d{yyyy-MM-dd}.log">
+         	<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+         	<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%F-%M] - %msg%n"></PatternLayout>
+         	<Policies>
+         		<!-- 按天生成日志. -->
+         		<TimeBasedTriggeringPolicy modulate="true" interval="1"/>  
+         	</Policies>
+         </RollingFile>
+    </Appenders>
+	<Loggers>
+		<!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+		<logger name="org.springframework" level="INFO"></logger>
+		<logger name="org.mybatis" level="INFO"></logger>
+		<logger name="com.kikipig.dao" level="debug"></logger>
+		<root level="info">
+			<appender-ref ref="Console"/>
+			<appender-ref ref="RollingFileInfo"/>
+			<appender-ref ref="RollingFileWarn"/>
+			<appender-ref ref="RollingFileError"/>
+         </root>
+    </Loggers>
+</Configuration>

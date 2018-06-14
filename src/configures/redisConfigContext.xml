@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="${redis.maxIdle}" />
+<!-- 		<property name="maxActive" value="${redis.maxActive}" /> -->
+		<property name="maxTotal" value="${redis.maxActive}" />
+<!-- 		<property name="maxWait" value="${redis.maxWait}" /> -->
+		<property name="maxWaitMillis" value="${redis.maxWait}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	</bean>
+	
+	<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${redis.host}"></property>
+		<property name="port" value="${redis.port}"></property>
+		<property name="password" value="${redis.pass}"></property>
+		<property name="poolConfig" ref="poolConfig"></property>
+	</bean>
+	
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory"   ref="connectionFactory" />
+		<!--如果不配置Serializer，那么存储的时候智能使用String，如果用User类型存储，那么会提示错误User can't cast to String！！！-->
+		<property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="valueSerializer">
+			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+		</property>
+	</bean>
+	
+	<!-- 注入redis工具类 -->
+	<bean class="com.kikipig.util.RedisUtil">
+		<property name="redisTemplate" ref="redisTemplate" />
+		<property name="defaultCacheExpireTime" value="${defaultCacheExpireTime}" />
+	</bean>
+</beans>

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="auction" default="buildWar" basedir=".">
+	
+	<!-- 定义了一些变量 -->    
+    <property name="src.dir" location="${basedir}/src" />
+    <property name="web.dir" location="${basedir}/WebContent" />
+    <property name="web.web-inf.dir" location="${web.dir}/WEB-INF" />
+    <property name="lib.dir" location="${web.web-inf.dir}/lib" />
+	<property name="ext.dir" location="${basedir}/extlib" />
+    <property name="classes.dir" location="${web.web-inf.dir}/classes" />
+	<!--打包以后文件存放的路径和名称 -->
+	<property name="war.file.path" location="${basedir}/build" />
+	<property name="war.file.name" value="auction.war" />
+	<!--path表示一个文件或路径名列表-->
+    <path id="classpath">
+        <!--Fileset 数据类型定义了一组文件-->
+        <fileset dir="${lib.dir}">
+        <!--该文件夹下所有以.jar结尾的文件-->
+            <include name="*.jar" />
+        </fileset>
+    	 <!--Fileset 数据类型定义了一组文件-->
+        <fileset dir="${ext.dir}">
+        <!--该文件夹下所有以.jar结尾的文件-->
+            <include name="*.jar" />
+        </fileset>
+    </path>
+	
+	<echo level="info" message="-----------------------本地环境打包开始---------------------"/>
+	
+	<target name="buildWar" depends="cleanCacheDir, copyDir, full-compile, replaceConfigures">
+		<echo level="info">将文件进行打包开始</echo>
+		<war warfile="${war.file.path}/${war.file.name}" webxml="${web.web-inf.dir}/web.xml">
+			<!-- <lib dir="${lib.dir}" /> -->
+			<!-- <classes dir="${classes.dir}" /> -->
+			<fileset dir="${web.dir}">
+				<!-- 不打包lib包 -->
+				<exclude name="**/WEB-INF/lib/*"/>
+			</fileset>
+		</war>
+		<echo level="info">将文件进行打包结束：${war.file.path}/${war.file.name}</echo>
+		<echo level="info" message="-----------------------本地环境打包完毕---------------------"/>
+	</target>
+
+	<available property="isExistWarDir" file="${war.file.path}" type="dir"/>
+	<target name="createDir" if="isExistWarDir">
+		<echo level="info">文件夹不否存在,创建目录 ${isExist}</echo>
+		<mkdir dir="${war.file.path}" />
+	</target>
+	
+	<target name="cleanCacheDir">
+		<echo level="info">清除缓存文件 ${classes.dir}</echo>
+		<delete dir="${classes.dir}"></delete>
+	</target>
+	
+	<target name="copyDir">
+		<echo level="info">Copy文件${src.dir}到指定文件夹${classes.dir}</echo>
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}" >
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="full-compile">
+		<echo level="info">项目编译开始</echo>
+		<!--srcdir 是需要编译的目录， destdir 是存放的 目录 -->
+		<javac srcdir="${src.dir}" encoding="utf-8" destdir="${classes.dir}" debug="true" includeantruntime="false">
+			<classpath refid="classpath"></classpath>
+		</javac>
+		<echo level="info">项目编译结束</echo>
+	</target>
+	
+	<target name="replaceConfigures">
+		<echo level="info">替换环境配置文件开始</echo>
+		<delete dir="${classes.dir}/configures">
+			<include name="www.jdbc.properties"/>
+			<include name="www.system.properties"/>
+			<include name="www.redis.properties"/>
+		</delete>
+		<move file="${classes.dir}/configures/test.jdbc.properties" tofile="${classes.dir}/configures/jdbc.properties"></move>
+		<move file="${classes.dir}/configures/test.system.properties" tofile="${classes.dir}/configures/system.properties"></move>
+		<move file="${classes.dir}/configures/test.redis.properties" tofile="${classes.dir}/configures/redis.properties"></move>
+	</target>
+</project>

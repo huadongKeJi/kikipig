@@ -1,0 +1,100 @@
+.header-top{
+    position: relative;
+    width: 100%;
+    height: 2.64rem;
+    background: url(../image/GroupCopy@3x.png) no-repeat center;
+    background-size: cover;
+}
+.back,.header-title,.integral,.tab{
+    position: absolute;
+}
+.back{
+    top: .33rem;
+    left: .11rem;
+    display: inline-block;
+    width: .25rem;
+    height: .25rem;
+    background: url(../image/back@3x.png) no-repeat center;
+    background-size: cover;
+}
+.header-title{
+    top: .33rem;
+    left: 1.54rem;
+    width: .68rem;
+    height: .24rem;
+    line-height:.24rem;
+    color: #444;
+    font-size: .17rem;
+}
+.integral{
+    position: relative;
+    top: .77rem;
+    left:1.39rem;
+    width: .99rem;
+    height: .99rem;
+    border: 2px solid rgba(255, 255, 255, .6);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    text-align: center;
+}
+.point-wrap{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -.4rem;
+    margin-left: -.4rem;
+    width: .8rem;
+    height: .8rem;
+}
+.point-title{
+    margin-top: .2rem;
+    font-size: .14rem;
+    font-weight: 600;
+    line-height:1 ;
+}
+.point{
+    font-size: .32rem;
+    letter-spacing: -2px;
+    font-weight: 600;
+    line-height:1 ;
+}
+.tab{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-size: 0;
+}
+.integral-store{
+    background: url(../image/integral-storebg@3x.png) no-repeat center;
+}
+.integral-rules{
+    background: url(../image/integral-rulesbg@3x.png) no-repeat center;
+}
+.integral-store,.integral-rules{
+    padding: .1rem .54rem;
+    display: inline-block;
+    width: 50%;
+    height: .4rem;
+    background-size: cover;
+}
+.get-integral img,.integral-store img,.integral-rules img{
+    display: inline-block;
+    max-width: 100%;
+}
+.tab-content{
+    padding: 0 .22rem 0 .2rem;
+}
+.get-integral{
+    padding: .26rem .46rem 0 .44rem;
+}
+.rules1{
+    margin-top: .2rem;
+}
+.rules2{
+    margin-top: .09rem;
+}
+.tab-content img{
+    display: inline-block;
+    max-width: 100%;
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- 读取系统配置文件 -->
+	<bean id="propertyConfigure" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:configures/system.properties</value>
+				<value>classpath:configures/jdbc.properties</value>
+				<value>classpath:configures/redis.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<context:annotation-config/>
+	<!-- 扫描注解类. -->
+	<context:component-scan base-package="com.kikipig.service"/>
+	<context:component-scan base-package="com.kikipig.dao"/>
+	<context:component-scan base-package="com.kikipig.configure"/>
+	
+	<!-- JDBC配置文件. -->
+	<import resource="jdbcConfigContext.xml"/>
+	<!-- REDIS配置文件. -->
+	<import resource="redisConfigContext.xml"/>
+	<!-- 初始化注入配置文件 -->
+	<import resource="applicationContext-beanInit.xml"/>
+</beans>
